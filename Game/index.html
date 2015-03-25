@@ -106,14 +106,17 @@
 
 
       //Left arrow key `press` method
-      var leftTimeout;
+      var interval;
+
+
       left.press = function() {
         //Change the hero's velocity when the key is pressed
         hero.vx = -3;
         hero.vy = 0;
         var counter = 0;
+        clearInterval(interval);
         heroTexture.setFrame(textures.hero.left[counter]);
-        leftTimeout = setInterval(function() {
+        interval = setInterval(function() {
             heroTexture.setFrame(textures.hero.left[counter]);
             counter = (counter + 1) % 3;
         }, 100);
@@ -126,7 +129,7 @@
         //Stop the hero
         if (!right.isDown && hero.vy === 0) {
           hero.vx = 0;
-          clearInterval(leftTimeout);
+          clearInterval(interval);
         }
       };
 
@@ -137,7 +140,8 @@
         hero.vx = 0;
         var counter = 0;
         heroTexture.setFrame(textures.hero.back[counter]);
-        upTimeout = setInterval(function() {
+        clearInterval(interval);
+        interval = setInterval(function() {
             heroTexture.setFrame(textures.hero.back[counter]);
             counter = (counter + 1) % 3;
         }, 100);
@@ -145,7 +149,7 @@
       up.release = function() {
         if (!down.isDown && hero.vx === 0) {
           hero.vy = 0;
-          clearInterval(upTimeout);
+          clearInterval(interval);
         }
       };
 
@@ -156,7 +160,8 @@
         hero.vy = 0;
         var counter = 0;
         heroTexture.setFrame(textures.hero.right[counter]);
-        rightTimeout = setInterval(function() {
+        clearInterval(interval);
+        interval = setInterval(function() {
             heroTexture.setFrame(textures.hero.right[counter]);
             counter = (counter + 1) % 3;
         }, 100);
@@ -164,7 +169,7 @@
       right.release = function() {
         if (!left.isDown && hero.vy === 0) {
           hero.vx = 0;
-          clearInterval(rightTimeout);
+          clearInterval(interval);
         }
       };
 
@@ -175,7 +180,8 @@
         hero.vx = 0;
         var counter = 0;
         heroTexture.setFrame(textures.hero.front[counter]);
-        downTimeout = setInterval(function() {
+        clearInterval(interval);
+        interval = setInterval(function() {
             heroTexture.setFrame(textures.hero.front[counter]);
             counter = (counter + 1) % 3;
         }, 100);
@@ -183,7 +189,7 @@
       down.release = function() {
         if (!up.isDown && hero.vx === 0) {
           hero.vy = 0;
-          clearInterval(downTimeout);
+          clearInterval(interval);
         }
       };
 
