@@ -72,6 +72,8 @@
       goblin.x = 64;
       goblin.y = 64;
 
+      goblin.vy = 5;
+      goblin.vx = 5;
       stage.addChild(goblin);
 
       //Position the rocket sprite on the canvas
@@ -175,6 +177,8 @@
       hero.x += hero.vx;
       hero.y += hero.vy;
 
+
+      moveMonster(goblin);
       //check for a collision between the cat and the box
       if (hitTestRectangle(hero, goblin)) {
 
@@ -192,6 +196,27 @@
 
       }
 
+    }
+
+    function moveMonster(blob) {
+
+      //Move the blob
+      blob.y += blob.vy;
+
+      //Check the blob's screen boundaries
+      var blobHitsWall = contain(blob, {x: 28, y: 10, width: 488, height: 480});
+
+      //If the blob hits the top or bottom of the stage, reverse
+      //its direction
+      if (blobHitsWall === "top" || blobHitsWall === "bottom") {
+        blob.vy *= -1;
+      }
+
+      //Test for a collision. If any of the enemies are touching
+      //the explorer, set `explorerHit` to `true`
+      if(hitTestRectangle(hero, blob)) {
+        // explorerHit = true;
+      }
     }
 
     function keyboard(keyCode) {
