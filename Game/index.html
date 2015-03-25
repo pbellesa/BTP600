@@ -3,7 +3,7 @@
 <title>Hello World</title>
 <body>
     <script src="pixi.js/bin/pixi.js"></script>
-    <script>
+    <script type="text/javascript">
 
     var stage = new PIXI.Stage(0x000000);
     var renderer = PIXI.autoDetectRenderer(
@@ -11,23 +11,19 @@
       {antialiasing: false, transparent: false, resolution: 1}
     );
 
-    // Set stage to fill screen.
-    // renderer.view.style.position = "absolute"
-    // renderer.view.style.width = window.innerWidth + "px";
-    // renderer.view.style.height = window.innerHeight + "px";
-    // renderer.view.style.display = "block";
-
     document.body.appendChild(renderer.view);
 
     // Load tileset
     var loader = new PIXI.AssetLoader([
             "assets/tileset.png",
             "assets/dungeon.png",
-            "assets/goblin.png"]);
+            "assets/goblin.png",
+            "assets/key.png",
+            "assets/door-tile.png"]);
     loader.onComplete = setup;
     loader.load();
 
-    var hero, goblin, dungeon, state, message;
+    var hero, goblin, dungeon, state, message, door, textures, heroTexture, movementInterval;
     // Function to load tileset and use sprite from it.
     function setup() {
 
@@ -37,28 +33,49 @@
       stage.addChild(dungeon);
 
       message = new PIXI.Text(
-        "Hello Pixi!",
-        {font: "32px sans-serif", fill: "white"}
+        "Save the princess!",
+        {font: "32px courier", fill: "white"}
       );
 
-        message.position.set(54, 96);
-        stage.addChild(message);
+      message.position.set(128, 256);
+      stage.addChild(message);
+
+
+      // Create door texture
+      var doorTexture = PIXI.TextureCache["assets/door-tile.png"];
+      var doorFront = new PIXI.Rectangle(224, 224, 32, 32);
+
+      doorTexture.setFrame(doorFront);
+
+      door = new PIXI.Sprite(doorTexture);
+
+      door.position.set(240, 0);
+
+      door.vy = 5;
+      door.vx = 5;
+      stage.addChild(door);
 
 
       //Create the `tileset` sprite from the texture
-      var texture = PIXI.TextureCache["assets/tileset.png"];
+      heroTexture = PIXI.TextureCache["assets/tileset.png"];
 
       //Create a rectangle object that defines the position and
       //size of the sub-image you want to extract from the texture
-      var heroFront = new PIXI.Rectangle(220, 128, 30, 30);
-      var heroBack = new PIXI.Rectangle(220, 224, 30, 30);
-      var heroRight = new PIXI.Rectangle(220, 192, 30, 30);
-      var heroLeft = new PIXI.Rectangle(220, 160, 30, 30);
+      textures = {
+        hero : {
+            front : [new PIXI.Rectangle(188, 128, 30, 30), new PIXI.Rectangle(220, 128, 30, 30), new PIXI.Rectangle(252, 128, 30, 30)],
+            back : [new PIXI.Rectangle(188, 224, 30, 30), new PIXI.Rectangle(220, 224, 30, 30), new PIXI.Rectangle(252, 224, 30, 30)],
+            right :[new PIXI.Rectangle(188, 192, 30, 30), new PIXI.Rectangle(220, 192, 30, 30), new PIXI.Rectangle(252, 192, 30, 30)],
+            left : [new PIXI.Rectangle(188, 160, 30, 30), new PIXI.Rectangle(220, 160, 30, 30), new PIXI.Rectangle(252, 160, 30, 30)]
+        }
+      };
+      console.log(textures);
+
       //Tell the texture to use that rectangular section
-      texture.setFrame(heroFront);
+      heroTexture.setFrame(textures.hero.front[0]);
 
       //Create the sprite from the texture
-      hero = new PIXI.Sprite(texture);
+      hero = new PIXI.Sprite(heroTexture);
 
 
       // Goblin
@@ -87,12 +104,22 @@
       right = keyboard(39),
       down = keyboard(40);
 
+
       //Left arrow key `press` method
+      var interval;
+
+
       left.press = function() {
         //Change the hero's velocity when the key is pressed
         hero.vx = -3;
         hero.vy = 0;
-        texture.setFrame(heroLeft);
+        var counter = 0;
+        clearInterval(interval);
+        heroTexture.setFrame(textures.hero.left[counter]);
+        interval = setInterval(function() {
+            heroTexture.setFrame(textures.hero.left[counter]);
+            counter = (counter + 1) % 3;
+        }, 100);
       };
 
       //Left arrow key `release` method
@@ -102,43 +129,67 @@
         //Stop the hero
         if (!right.isDown && hero.vy === 0) {
           hero.vx = 0;
+          clearInterval(interval);
         }
       };
 
       //Up
+      var upTimeout;
       up.press = function() {
         hero.vy = -3;
         hero.vx = 0;
-        texture.setFrame(heroBack);
+        var counter = 0;
+        heroTexture.setFrame(textures.hero.back[counter]);
+        clearInterval(interval);
+        interval = setInterval(function() {
+            heroTexture.setFrame(textures.hero.back[counter]);
+            counter = (counter + 1) % 3;
+        }, 100);
       };
       up.release = function() {
         if (!down.isDown && hero.vx === 0) {
           hero.vy = 0;
-
+          clearInterval(interval);
         }
       };
 
       //Right
+      var rightTimeout;
       right.press = function() {
         hero.vx = 3;
         hero.vy = 0;
-        texture.setFrame(heroRight);
+        var counter = 0;
+        heroTexture.setFrame(textures.hero.right[counter]);
+        clearInterval(interval);
+        interval = setInterval(function() {
+            heroTexture.setFrame(textures.hero.right[counter]);
+            counter = (counter + 1) % 3;
+        }, 100);
       };
       right.release = function() {
         if (!left.isDown && hero.vy === 0) {
           hero.vx = 0;
+          clearInterval(interval);
         }
       };
 
       //Down
+      var downTimeout;
       down.press = function() {
         hero.vy = 3;
         hero.vx = 0;
-        texture.setFrame(heroFront);
+        var counter = 0;
+        heroTexture.setFrame(textures.hero.front[counter]);
+        clearInterval(interval);
+        interval = setInterval(function() {
+            heroTexture.setFrame(textures.hero.front[counter]);
+            counter = (counter + 1) % 3;
+        }, 100);
       };
       down.release = function() {
         if (!up.isDown && hero.vx === 0) {
           hero.vy = 0;
+          clearInterval(interval);
         }
       };
 
@@ -179,6 +230,11 @@
 
 
       moveMonster(goblin);
+
+
+      if (hitTestRectangle(hero, door)) {
+
+      }
       //check for a collision between the cat and the box
       if (hitTestRectangle(hero, goblin)) {
 
