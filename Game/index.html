@@ -4,6 +4,7 @@
 <body>
     <script src="pixi.js/bin/pixi.js"></script>
     <script type="text/javascript" src="supportlib.js"></script>
+    <script src="Goblin.js"></script>
     <script type="text/javascript">
 
     var stage = new PIXI.Stage(0x000000);
@@ -153,34 +154,40 @@
 
       // Goblin
 
-      frames.goblin = {
-        front: [new PIXI.Rectangle(0, 0, 30, 30), new PIXI.Rectangle(32, 0, 30, 30),new PIXI.Rectangle(64, 0, 30, 30)],
-        left: [new PIXI.Rectangle(0, 32, 30, 30), new PIXI.Rectangle(32, 32, 30, 30),new PIXI.Rectangle(64, 32, 30, 30)],
-        right: [new PIXI.Rectangle(0, 64, 30, 30), new PIXI.Rectangle(32, 64, 30, 30),new PIXI.Rectangle(64, 64, 30, 30)],
-        back: [new PIXI.Rectangle(0, 96, 30, 30), new PIXI.Rectangle(32, 96, 30, 30),new PIXI.Rectangle(64, 96, 30, 30)]
-      };
+      // frames.goblin = {
+      //   front: [new PIXI.Rectangle(0, 0, 30, 30), new PIXI.Rectangle(32, 0, 30, 30),new PIXI.Rectangle(64, 0, 30, 30)],
+      //   left: [new PIXI.Rectangle(0, 32, 30, 30), new PIXI.Rectangle(32, 32, 30, 30),new PIXI.Rectangle(64, 32, 30, 30)],
+      //   right: [new PIXI.Rectangle(0, 64, 30, 30), new PIXI.Rectangle(32, 64, 30, 30),new PIXI.Rectangle(64, 64, 30, 30)],
+      //   back: [new PIXI.Rectangle(0, 96, 30, 30), new PIXI.Rectangle(32, 96, 30, 30),new PIXI.Rectangle(64, 96, 30, 30)]
+      // };
 
-      sprites.goblin = new PIXI.Texture(PIXI.TextureCache["assets/goblin.png"], frames.goblin.front[0]);
+      // sprites.goblin = new PIXI.Texture(PIXI.TextureCache["assets/goblin.png"], frames.goblin.front[0]);
 
-      goblin = new PIXI.Sprite(sprites.goblin);
+      // goblin = new PIXI.Sprite(sprites.goblin);
 
-      goblin.x = 64;
-      goblin.y = 64;
+      // goblin.x = 64;
+      // goblin.y = 64;
 
-      goblin.vy = 5;
-      goblin.vx = 5;
+      // goblin.vy = 5;
+      // goblin.vx = 5;
 
-      gamePlayScene.addChild(goblin);
+      // gamePlayScene.addChild(goblin);
 
-      moveMonster(goblin);
+      // moveMonster(goblin);
 
 
-      var counter = 0;
-      sprites.goblin.setFrame(frames.goblin.front[counter]);
-      goblinInterval = setInterval(function() {
-        sprites.goblin.setFrame(frames.goblin.front[counter]);
-        counter = (counter + 1) % 3;
-      }, 100);
+      // var counter = 0;
+      // sprites.goblin.setFrame(frames.goblin.front[counter]);
+      // goblinInterval = setInterval(function() {
+      //   sprites.goblin.setFrame(frames.goblin.front[counter]);
+      //   counter = (counter + 1) % 3;
+      // }, 100);
+      goblin = new Goblin();
+
+      gamePlayScene.addChild(goblin.getSprite());
+
+      //console.log(goblin);
+      goblin.animateFront();
 
       // Set game state
       state = play;
@@ -214,7 +221,7 @@
       hero.y += hero.vy;
 
 
-      moveMonster(goblin);
+      goblin.moveVertical();
 
 
       if (hitTestRectangle(hero, door.north)) {
@@ -222,7 +229,7 @@
         gamePlayScene.visible = false;
       }
       //check for a collision between the cat and the box
-      if (hitTestRectangle(hero, goblin)) {
+      if (hitTestRectangle(hero, goblin.getSprite())) {
 
         //if there's a collision, change the message text
         //and tint the box red
@@ -336,43 +343,6 @@
           clearInterval(interval);
         }
       };
-    }
-
-    function moveMonster(blob) {
-
-      //Move the blob
-      blob.y += blob.vy;
-      //Check the blob's screen boundaries
-      var blobHitsWall = contain(blob, {x: 28, y: 10, width: 488, height: 480});
-
-      //If the blob hits the top or bottom of the stage, reverse
-      //its direction
-      if (blobHitsWall === "top") {
-        blob.vy *= -1;
-        var counter = 0;
-        sprites.goblin.setFrame(frames.goblin.front[counter]);
-        clearInterval(goblinInterval);
-        goblinInterval = setInterval(function() {
-          sprites.goblin.setFrame(frames.goblin.front[counter]);
-          counter = (counter + 1) % 3;
-        }, 100);
-      }
-
-      if (blobHitsWall === "bottom") {
-        blob.vy *= -1;
-        var counter = 0;
-        sprites.goblin.setFrame(frames.goblin.back[counter]);
-        clearInterval(goblinInterval);
-        goblinInterval = setInterval(function() {
-          sprites.goblin.setFrame(frames.goblin.back[counter]);
-          counter = (counter + 1) % 3;
-        }, 100);
-      }
-      //Test for a collision. If any of the enemies are touching
-      //the explorer, set `explorerHit` to `true`
-      if(hitTestRectangle(hero, blob)) {
-        hero.x -= 3;
-      }
     }
 
 
