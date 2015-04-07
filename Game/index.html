@@ -5,6 +5,7 @@
     <script src="pixi.js/bin/pixi.js"></script>
     <script type="text/javascript" src="supportlib.js"></script>
     <script src="Goblin.js"></script>
+    <script src="Key.js"></script>
     <script type="text/javascript">
 
     var stage = new PIXI.Stage(0x000000);
@@ -188,6 +189,17 @@
 
       //console.log(goblin);
       goblin.animateFront();
+	  
+	  
+	  //////////////////////////////////////////////
+	  // KEY
+	  /////////////////////////////////////////////
+	  key = new Key();
+	  key.spawn();
+	  gamePlayScene.addChild(key.getSprite());
+	  
+	  
+	  
 
       // Set game state
       state = play;
