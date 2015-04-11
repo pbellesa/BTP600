@@ -8,6 +8,7 @@
 	<script src="Goblin.js"></script>
 	<script src="Key.js"></script>
 	<script src="Hero.js"></script>
+  <script src="Door.js"></script>
 	<script type="text/javascript">
 		var stage = new PIXI.Stage(0x000000);
 		var renderer = PIXI.autoDetectRenderer(
@@ -48,8 +49,6 @@
 			sprites = {},
 			gamePlayScene;
 
-
-
 		// Function to load tileset and use sprite from it.
 		function setup() {
 			// Setting up scenes
@@ -85,49 +84,16 @@
 
       /**************HERO END*************/
 
-			// Create door texture
-			frames.door = {
-				north: new PIXI.Rectangle(224, 224, 32, 32),
-				west: new PIXI.Rectangle(160, 96, 32, 32),
-				south: new PIXI.Rectangle(128, 224, 32, 32),
-				east: new PIXI.Rectangle(160, 96, 32, 32)
-			};
-
-			sprites.door = {
-				north: new PIXI.Texture(PIXI.BaseTextureCache["assets/door-tile.png"], frames.door.north),
-				south: new PIXI.Texture(PIXI.BaseTextureCache["assets/door-tile.png"], frames.door.south),
-				west: new PIXI.Texture(PIXI.BaseTextureCache["assets/door-tile.png"], frames.door.west),
-				east: new PIXI.Texture(PIXI.BaseTextureCache["assets/door-tile.png"], frames.door.east)
-			};
-
-			// NORTH DOOR
-			door.north = new PIXI.Sprite(sprites.door.north);
-
-			door.north.position.set(240, 0);
-
-			gamePlayScene.addChild(door.north);
-
-			// SOUTH DOOR
-
-			door.south = new PIXI.Sprite(sprites.door.south);
-			door.south.position.set(240, 454);
-			gamePlayScene.addChild(door.south);
-
-			// WEST DOOR
-
-			door.west = new PIXI.Sprite(sprites.door.west);
-			door.west.position.set(8, 240);
-			gamePlayScene.addChild(door.west);
-
-			// EAST DOOR
-
-			door.east = new PIXI.Sprite(sprites.door.east);
-			door.east.position.set(502, 240);
-			door.east.scale.x = -1;
-			gamePlayScene.addChild(door.east);
-
+      
+      /**************DOOR BEGIN*************/
+      door = new Door();
+      gamePlayScene.addChild(door.north);
+      gamePlayScene.addChild(door.south);
+      gamePlayScene.addChild(door.west);
+      gamePlayScene.addChild(door.east);
+      /**************DOOR END*************/
+      
 			// Goblin
-
 			goblin = new Goblin();
 			gamePlayScene.addChild(goblin.getSprite());
 			goblin.animateFront();
@@ -172,12 +138,12 @@
 			goblin.moveVertical();
 
       /**********Collision section Begin**********/
-      
+
 			if (hitTestRectangle(hero, door.north)) {
 				gameOverScene.visible = true;
 				gamePlayScene.visible = false;
 			}
-      
+
 			//check for a collision between the Hero and the Goblin
 			if (hitTestRectangle(hero.getSprite(), goblin.getSprite())) {
 				//if there's a collision, change the message text
