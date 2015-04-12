@@ -9,6 +9,7 @@
 	<script src="Key.js"></script>
 	<script src="Hero.js"></script>
   <script src="Door.js"></script>
+  <script src="Room.js"></script>
 	<script type="text/javascript">
 		var stage = new PIXI.Stage(0x000000);
 		var renderer = PIXI.autoDetectRenderer(
@@ -34,79 +35,71 @@
 
 		loader.load();
 
-		var hero,
-			goblin,
-			dungeon,
+		var
+
+
 			state,
 			message,
-			door = {},
-			frames = {},
-			movementInterval,
-			goblinInterval,
-			monstersMoving,
+			room,
+      //play = function(){},
+
 			gameOverScene,
 			gameStartScene,
-			sprites = {},
 			gamePlayScene;
 
 		// Function to load tileset and use sprite from it.
 		function setup() {
 			// Setting up scenes
-			gamePlayScene = new PIXI.DisplayObjectContainer();
-			gameOverScene = new PIXI.DisplayObjectContainer();
+			// gamePlayScene = new PIXI.DisplayObjectContainer();
+			// gameOverScene = new PIXI.DisplayObjectContainer();
+
+      room = new Room();
+
+      room.setDoor({north: true, south: true, west: false, east: false});
+      gamePlayScene = room.getRoom();
 
 			stage.addChild(gamePlayScene);
-			stage.addChild(gameOverScene);
+			//stage.addChild(gameOverScene);
 
-			gameOverScene.visible = false;
+			//gameOverScene.visible = false;
 
 			// Dungeon Texture
-			var dungeonTexture = PIXI.TextureCache["assets/dungeon.png"];
-			dungeon = new PIXI.Sprite(dungeonTexture);
-			gamePlayScene.addChild(dungeon);
+			// var dungeonTexture = PIXI.TextureCache["assets/dungeon.png"];
+			// dungeon = new PIXI.Sprite(dungeonTexture);
+			// gamePlayScene.addChild(dungeon);
 
-			monstersMoving = false;
-			message = new PIXI.Text(
-				"Save the princess!", {
-					font: "32px courier",
-					fill: "white"
-				}
-			);
+			// message = new PIXI.Text(
 
-			message.position.set(128, 256);
-			gamePlayScene.addChild(message);
+			// );
+
+			// message.position.set(128, 256);
+			// gamePlayScene.addChild(message);
 
 
       /**************HERO BEGIN*************/
       //Creates a new Hero object and adds it to the PlayScene
-      hero = new Hero();
-      gamePlayScene.addChild(hero.getSprite());
+
+
 
       /**************HERO END*************/
 
-      
+
       /**************DOOR BEGIN*************/
-      door = new Door();
-      gamePlayScene.addChild(door.north);
-      gamePlayScene.addChild(door.south);
-      gamePlayScene.addChild(door.west);
-      gamePlayScene.addChild(door.east);
+
       /**************DOOR END*************/
-      
+
 			// Goblin
-			goblin = new Goblin();
-			gamePlayScene.addChild(goblin.getSprite());
-			goblin.animateFront();
+
+			// gamePlayScene.addChild(goblin.getSprite());
+			// goblin.animateFront();
 
 
 			//////////////////////////////////////////////
 			// KEY
 			/////////////////////////////////////////////
-      
-			key = new Key();
-			key.spawn();
-			gamePlayScene.addChild(key.getSprite());
-      
+
+
+
 
 			// Set game state
 			state = play;
@@ -132,40 +125,10 @@
 
 
 		function play() {
-      
-      //Element movement
-      hero.moveHero(); 
-			goblin.moveVertical();
 
-      /**********Collision section Begin**********/
+      room.play();
 
-			if (hitTestRectangle(hero, door.north)) {
-				gameOverScene.visible = true;
-				gamePlayScene.visible = false;
-			}
 
-			//check for a collision between the Hero and the Goblin
-			if (hitTestRectangle(hero.getSprite(), goblin.getSprite())) {
-				//if there's a collision, change the message text
-				//and tint the box red
-				message.setText("Aaagghh, you died!");
-				hero.getSprite().tint = 0xff3300;
-			} 
-      else if(hitTestRectangle(hero.getSprite(), key.getSprite())) {
-        //if there's a collision, change the message text
-				//and tint the box red
-				message.setText("Free The princess!");
-        hero.getSprite().tint = 0xffff00;
-      }
-      else {
-				//if there's no collision, reset the message text 
-        //and the hero's colour
-				message.setText("No collision...");
-				hero.getSprite().tint = 0xffffff;
-			}
-      
-      /***********Collision section End***********/
-      
 		}
 
 	</script>
