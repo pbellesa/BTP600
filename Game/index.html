@@ -8,7 +8,7 @@
 	<script src="Goblin.js"></script>
 	<script src="Key.js"></script>
 	<script src="Hero.js"></script>
-  <script src="Door.js"></script>
+	<script src="Door.js"></script>
 	<script type="text/javascript">
 		var stage = new PIXI.Stage(0x000000);
 		var renderer = PIXI.autoDetectRenderer(
@@ -77,36 +77,50 @@
 			gamePlayScene.addChild(message);
 
 
-      /**************HERO BEGIN*************/
-      //Creates a new Hero object and adds it to the PlayScene
-      hero = new Hero();
-      gamePlayScene.addChild(hero.getSprite());
+			/**************HERO BEGIN*************/
+			//Creates a new Hero object and adds it to the PlayScene
+			hero = new Hero();
+			gamePlayScene.addChild(hero.getSprite());
 
-      /**************HERO END*************/
+			/**************HERO END*************/
 
-      
-      /**************DOOR BEGIN*************/
-      door = new Door();
-      gamePlayScene.addChild(door.north);
-      gamePlayScene.addChild(door.south);
-      gamePlayScene.addChild(door.west);
-      gamePlayScene.addChild(door.east);
-      /**************DOOR END*************/
-      
-			// Goblin
-			goblin = new Goblin();
-			gamePlayScene.addChild(goblin.getSprite());
-			goblin.animateFront();
 
+			/**************DOOR BEGIN*************/
+			door = new Door();
+			gamePlayScene.addChild(door.north);
+			gamePlayScene.addChild(door.south);
+			gamePlayScene.addChild(door.west);
+			gamePlayScene.addChild(door.east);
+			/**************DOOR END*************/
+
+			/**************GOBLIN BEGIN*************/
+			// Create an instance of our factory that makes cars
+			var goblinFactory = new GoblinFactory();
+			udf = goblinFactory.createGoblin({
+				goblinType: "udf",
+				xPos: 150,
+				yPos: 50
+			});
+			lrf = goblinFactory.createGoblin({
+				goblinType: "lrf",
+				xPos: 150,
+				yPos: 100
+			});
+			lrf.goblin.setPosition(100, 200);
+			gamePlayScene.addChild(udf.goblin.getSprite());
+			gamePlayScene.addChild(lrf.goblin.getSprite());
+			udf.goblin.animateFront();
+			lrf.goblin.animateRight();
+			/**************GOBLIN END*************/
 
 			//////////////////////////////////////////////
 			// KEY
 			/////////////////////////////////////////////
-      
+
 			key = new Key();
 			key.spawn();
 			gamePlayScene.addChild(key.getSprite());
-      
+
 
 			// Set game state
 			state = play;
@@ -132,12 +146,13 @@
 
 
 		function play() {
-      
-      //Element movement
-      hero.moveHero(); 
-			goblin.moveVertical();
 
-      /**********Collision section Begin**********/
+			//Element movement
+			hero.moveHero();
+			udf.goblin.moveVertical();
+			lrf.goblin.moveHorizantal();
+
+			/**********Collision section Begin**********/
 
 			if (hitTestRectangle(hero, door.north)) {
 				gameOverScene.visible = true;
@@ -145,28 +160,30 @@
 			}
 
 			//check for a collision between the Hero and the Goblin
-			if (hitTestRectangle(hero.getSprite(), goblin.getSprite())) {
+			if (hitTestRectangle(hero.getSprite(), udf.goblin.getSprite())) {
 				//if there's a collision, change the message text
 				//and tint the box red
 				message.setText("Aaagghh, you died!");
 				hero.getSprite().tint = 0xff3300;
-			} 
-      else if(hitTestRectangle(hero.getSprite(), key.getSprite())) {
-        //if there's a collision, change the message text
+			} else if (hitTestRectangle(hero.getSprite(), lrf.goblin.getSprite())) {
+				//if there's a collision, change the message text
+				//and tint the box red
+				message.setText("Aaagghh, you died!");
+				hero.getSprite().tint = 0xff3300;
+			} else if (hitTestRectangle(hero.getSprite(), key.getSprite())) {
+				//if there's a collision, change the message text
 				//and tint the box red
 				message.setText("Free The princess!");
-        hero.getSprite().tint = 0xffff00;
-      }
-      else {
+				hero.getSprite().tint = 0xffff00;
+			} else {
 				//if there's no collision, reset the message text 
-        //and the hero's colour
+				//and the hero's colour
 				message.setText("No collision...");
 				hero.getSprite().tint = 0xffffff;
 			}
-      
-      /***********Collision section End***********/
-      
-		}
 
+			/***********Collision section End***********/
+
+		}
 	</script>
 </body>

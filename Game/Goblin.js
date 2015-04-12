@@ -38,6 +38,19 @@ function Goblin () {
       animationCounter = (animationCounter + 1) % 3;
     }, 100);
   };
+  
+  this.animateLeft = function() {
+    if(animationInterval != null){
+      clearInterval(animationInterval);
+      animationCounter = 0;
+    }
+
+    texture.setFrame(frames.left[animationCounter]);
+    animationInterval = setInterval(function() {
+      texture.setFrame(frames.left[animationCounter]);
+      animationCounter = (animationCounter + 1) % 3;
+    }, 100);
+  };
 
   this.animateBack = function() {
     if(animationInterval != null){
@@ -51,6 +64,20 @@ function Goblin () {
       animationCounter = (animationCounter + 1) % 3;
     }, 100);
   };
+  
+  this.animateRight = function() {
+    if(animationInterval != null){
+      clearInterval(animationInterval);
+      animationCounter = 0;
+    }
+
+    texture.setFrame(frames.right[animationCounter]);
+    animationInterval = setInterval(function() {
+      texture.setFrame(frames.right[animationCounter]);
+      animationCounter = (animationCounter + 1) % 3;
+    }, 100);
+  };
+  
   this.setPosition = function (x, y) {
     this.sprite.x = x;
     this.sprite.y = y;
@@ -83,5 +110,149 @@ function Goblin () {
         this.animateBack();
       }
   }
+  
+  this.moveHorizantal = function() {
+          //Move the blob
+      this.sprite.x += this.sprite.vx;
+      //Check the blob's screen boundaries
+      var wallHit = contain(this.sprite, {x: 28, y: 10, width: 488, height: 480});
+
+      //If the blob hits the top or bottom of the stage, reverse
+      //its direction
+      if (wallHit === "left") {
+        this.sprite.vx *= -1;
+        this.animateRight();
+      }
+
+      if (wallHit === "right") {
+        this.sprite.vx *= -1;
+        this.animateLeft();
+      }
+  }
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+// A constructor for defining new up and down fast goblin
+function UDF( options ) {
+ 
+  // some defaults
+  this.type = "udf";
+  this.goblin = new Goblin();
+  this.goblin.setPosition(options.xPos, options.yPos);
+  this.goblin.setSpeed(10, 10);
+ 
+}
+ 
+// A constructor for defining new up and down slow goblin
+function UDS( options ){
+ 
+  this.type = "uds";
+  this.goblin = new Goblin();
+  this.goblin.setPosition(options.xPos, options.yPos);
+  this.goblin.setSpeed(5, 5);
+  
+}
+
+// A constructor for defining new left and right fast goblin
+function LRF( options ){
+ 
+  this.type = "lrf";
+  this.goblin = new Goblin();
+  this.goblin.setPosition(options.xPos, options.yPos);
+  this.goblin.setSpeed(10, 10);
+  
+}
+
+// A constructor for defining new left and right slow goblin
+function LRS( options ){
+ 
+  this.type = "lrs";
+  this.goblin = new Goblin();
+  this.goblin.setPosition(options.xPos, options.yPos);
+  this.goblin.setSpeed(5, 5);
+  
+}
+ 
+ 
+// FactoryExample.js
+ 
+// Define a skeleton vehicle factory
+function GoblinFactory() {}
+ 
+// Define the prototypes and utilities for this factory
+ 
+// Our default goblinClass is Car
+GoblinFactory.prototype.goblinClass = UDF;
+ 
+// Our Factory method for creating new Vehicle instances
+GoblinFactory.prototype.createGoblin = function ( options ) {
+ 
+  switch(options.goblinType){
+    case "udf":
+      this.goblinClass = UDF;
+      break;
+    case "uds":
+      this.goblinClass = UDS;
+      break;
+	case "lrf":
+      this.goblinClass = LRF;
+      break;
+    case "lrs":
+      this.goblinClass = LRS;
+      break;
+    //defaults to GoblinFactory.prototype.goblinClass (Car)
+  }
+ 
+  return new this.goblinClass( options );
+ 
+};
+ 
+// Create an instance of our factory that makes cars
+// var goblinFactory = new GoblinFactory();
+// var car = goblinFactory.createGoblin( {
+            // goblinType: "car",
+            // color: "yellow",
+            // doors: 6 } );
+ 
+// Test to confirm our car was created using the goblinClass/prototype Car
+ 
+// Outputs: true
+// console.log( car instanceof Car );
+ 
+// Outputs: Car object of color "yellow", doors: 6 in a "brand new" state
+// console.log( car );
+
+
+
+
+
+
+
+
+
+
+
