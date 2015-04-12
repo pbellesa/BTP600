@@ -1,3 +1,6 @@
+////////////////////
+// Basic Goblin
+////////////////////
 function Goblin () {
   // TILE SET FRAMES
   var frames = {
@@ -132,29 +135,6 @@ function Goblin () {
 
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  
 // A constructor for defining new up and down fast goblin
 function UDF( options ) {
@@ -196,19 +176,16 @@ function LRS( options ){
   this.goblin.setSpeed(5, 5);
   
 }
- 
- 
-// FactoryExample.js
- 
+
 // Define a skeleton vehicle factory
 function GoblinFactory() {}
  
 // Define the prototypes and utilities for this factory
  
-// Our default goblinClass is Car
+// Our default goblinClass is UDF
 GoblinFactory.prototype.goblinClass = UDF;
  
-// Our Factory method for creating new Vehicle instances
+// Our Factory method for creating new Goblin instances
 GoblinFactory.prototype.createGoblin = function ( options ) {
  
   switch(options.goblinType){
@@ -224,27 +201,13 @@ GoblinFactory.prototype.createGoblin = function ( options ) {
     case "lrs":
       this.goblinClass = LRS;
       break;
-    //defaults to GoblinFactory.prototype.goblinClass (Car)
+    //defaults to GoblinFactory.prototype.goblinClass (UDF)
   }
  
   return new this.goblinClass( options );
  
 };
  
-// Create an instance of our factory that makes cars
-// var goblinFactory = new GoblinFactory();
-// var car = goblinFactory.createGoblin( {
-            // goblinType: "car",
-            // color: "yellow",
-            // doors: 6 } );
- 
-// Test to confirm our car was created using the goblinClass/prototype Car
- 
-// Outputs: true
-// console.log( car instanceof Car );
- 
-// Outputs: Car object of color "yellow", doors: 6 in a "brand new" state
-// console.log( car );
 
 
 
