@@ -62,7 +62,9 @@ function Room () {
     }
   }
 
-
+  this.setHeroPosition = function(position){
+    switch
+  }
   // Set all the doors, receives object with
   // north, south, east, west with boolean values
   this.setDoor = function(doorSet){
