@@ -41,7 +41,6 @@ function Room () {
     message.position.set(128, 256);
   }
 
-
   // Check for collisions with doors.
   this.doorHit = function() {
     if (hitTestRectangle(hero.getSprite(), doors.north) && doors.north.visible) {
