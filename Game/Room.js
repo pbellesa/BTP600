@@ -1,14 +1,14 @@
-function Room () {
+function Room (hero) {
 
   var container = new PIXI.DisplayObjectContainer();
   var texture = PIXI.TextureCache["assets/dungeon.png"];
   var sprite = new PIXI.Sprite(texture);
   var doors = new Door();
-  var hero = new Hero();
   var goblin = new Goblin();
   var key = new Key();
   var message = new PIXI.Text("Save the princess!", {font: "32px courier", fill: "white"});
-
+  var hasKey = false;
+  //var hero = new Hero();
 
   this.getRoom = function() {
     return container;
@@ -16,8 +16,9 @@ function Room () {
 
 
   this.init = function(){
+    console.log(hero);
+    container.visible = false;
     container.addChild(sprite);
-
     // Doors
 
     container.addChild(doors.north);
@@ -26,7 +27,7 @@ function Room () {
     container.addChild(doors.east);
 
     // Hero
-    container.addChild(hero.getSprite());
+    //container.addChild(hero.getSprite());
 
     // Goblin
     container.addChild(goblin.getSprite());
@@ -36,33 +37,61 @@ function Room () {
 
     key.spawn();
     container.addChild(key.getSprite());
+    key.getSprite().visible = false;
 
     container.addChild(message);
-    message.position.set(128, 256);
+    message.position.set(120, 240);
   }
 
+  this.setVisibility = function (visible){
+    container.visible = visible;
+  }
+  this.spawnKey = function() {
+    hasKey = true;
+    key.getSprite().visible = true;
+  }
   // Check for collisions with doors.
   this.doorHit = function() {
     if (hitTestRectangle(hero.getSprite(), doors.north) && doors.north.visible) {
       container.visible = false;
+      this.setHeroPosition("south");
       return "n";
     }
-    else if (hitTestRectangle(hero.getSprite(), doors.south) && doors.south.visible) {
+    if (hitTestRectangle(hero.getSprite(), doors.south) && doors.south.visible) {
       container.visible = false;
+      this.setHeroPosition("north");
       return "s";
     }
-    else if (hitTestRectangle(hero.getSprite(), doors.west) && doors.west.visible) {
+    if (hitTestRectangle(hero.getSprite(), doors.west) && doors.west.visible) {
       container.visible = false;
+      this.setHeroPosition("east");
       return "w";
     }
-    else if (hitTestRectangle(hero.getSprite(), doors.east) && doors.east.visible) {
+    if (hitTestRectangle(hero.getSprite(), doors.east) && doors.east.visible) {
       container.visible = false;
+      this.setHeroPosition("west");
       return "e";
     }
+    return null;
   }
 
   this.setHeroPosition = function(position){
-    switch
+    switch(position) {
+      case "north":
+          hero.setPosition(240, 50);
+          break;
+      case "south":
+          hero.setPosition(240, 410);
+          break;
+      case "west":
+          hero.setPosition(50, 240);
+          break;
+      case "east":
+          hero.setPosition(380, 240);
+          break;
+      default:
+          hero.setPosition(240, 240);
+    }
   }
   // Set all the doors, receives object with
   // north, south, east, west with boolean values
@@ -70,37 +99,33 @@ function Room () {
     if (!doorSet.north) {
       doors.north.visible = false;
     }
-    else if (!doorSet.south) {
+    if (!doorSet.south) {
       doors.south.visible = false;
     }
-    else if (!doorSet.west) {
+    if (!doorSet.west) {
       doors.west.visible = false;
     }
-    else if (!doorSet.east) {
+    if (!doorSet.east) {
       doors.east.visible = false;
     }
-
   }
 
   // Container play function to be called on loop
   this.play = function() {
           //Element movement
+
       hero.moveHero();
+
       goblin.moveVertical();
 
-      this.doorHit();
 
-      //check for a collision between the Hero and the Goblin
       if (hitTestRectangle(hero.getSprite(), goblin.getSprite())) {
-        //if there's a collision, change the message text
-        //and tint the box red
+
         message.setText("Aaagghh, you died!");
         hero.getSprite().tint = 0xff3300;
-        hero.getSprite().visible = false;
+        //hero.getSprite().visible = false;
       }
-      else if(hitTestRectangle(hero.getSprite(), key.getSprite())) {
-        //if there's a collision, change the message text
-        //and tint the box red
+      else if(hitTestRectangle(hero.getSprite(), key.getSprite()) && key.getSprite().visible) {
         message.setText("Free The princess!");
         hero.getSprite().tint = 0xffff00;
         key.getSprite().visible = false;
@@ -109,7 +134,7 @@ function Room () {
         //if there's no collision, reset the message text
         //and the hero's colour
         //this.message.setText("No collision...");
-        hero.getSprite().tint = 0xffffff;
+        //hero.getSprite().tint = 0xffffff;
       }
   }
 

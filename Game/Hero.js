@@ -23,8 +23,8 @@ function Hero() {
     //Constructor to set initial speed and location of sprite (hero)
     this.init = function() {
         //location
-        this.sprite.x = 32;
-        this.sprite.y = 32;
+        this.sprite.x = 240;
+        this.sprite.y = 240;
 
         //speed
         this.sprite.vy = 0;

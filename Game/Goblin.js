@@ -22,7 +22,6 @@ function Goblin () {
 
     this.sprite.vy = 5;
     this.sprite.vx = 5;
-    console.log(texture);
   }
   this.init();
 

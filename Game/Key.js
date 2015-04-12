@@ -15,7 +15,6 @@ function Key() {
 		this.sprite.width = 32; // width of the item
 		this.sprite.height = 32; // height of the item
 		this.sprite.interactive = true; // set true to have touch ability
-		console.log(texture);
 	}
 	this.init();
 	// SETTERS
@@ -42,7 +41,7 @@ function Key() {
 		if (spawnPosY >= ROOM_HEIGHT)
 			spawnPosY = ROOM_HEIGHT - KEY_OFFSET;
 		// get rooms
-		// attach key to a room's stage 
+		// attach key to a room's stage
 		// selectedRoom.setPosition(spawnPosX, spwanPosY);
 		this.setPosition(spawnPosX, spawnPosY);
 	}

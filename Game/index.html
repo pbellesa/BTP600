@@ -10,6 +10,8 @@
 	<script src="Hero.js"></script>
   <script src="Door.js"></script>
   <script src="Room.js"></script>
+  <script src="Dungeon.js"></script>
+
 	<script type="text/javascript">
 		var stage = new PIXI.Stage(0x000000);
 		var renderer = PIXI.autoDetectRenderer(
@@ -36,14 +38,7 @@
 		loader.load();
 
 		var
-
-
-			state,
-			message,
-			room,
-			gameOverScene,
-			gameStartScene,
-			gamePlayScene;
+      dungeon;
 
 		// Function to load tileset and use sprite from it.
 		function setup() {
@@ -51,15 +46,13 @@
 			// gamePlayScene = new PIXI.DisplayObjectContainer();
 			// gameOverScene = new PIXI.DisplayObjectContainer();
 
-      room = new Room();
+   //    room = new Room();
+      dungeon = new Dungeon(stage);
+   //    room.setDoor({north: true, south: true, west: false, east: false});
+   //    gamePlayScene = room.getRoom();
 
-      room.setDoor({north: true, south: true, west: false, east: false});
-      gamePlayScene = room.getRoom();
+			// stage.addChild(gamePlayScene);
 
-			stage.addChild(gamePlayScene);
-
-			// Set game state
-			state = play;
 
 			//Render the stage
 			renderer.render(stage);
@@ -74,19 +67,13 @@
 			requestAnimationFrame(gameLoop);
 
 			//Update the current game state
-			state();
+			dungeon.play();
 
 			//Render the stage to see the animation
 			renderer.render(stage);
 		}
 
 
-		function play() {
-
-      room.play();
-
-
-		}
 
 	</script>
 </body>
