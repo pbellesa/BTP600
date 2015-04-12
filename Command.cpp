@@ -1,10 +1,17 @@
+/*
+  BTP600 - Command Lab
+  
+  Submitted By: Pedro Bellesa and Maggie Ha
+  Submitted On: February 22, 2015
+*/
+
 #include <iostream>
 #include <cstring>
 #include <string>
+#include <stack>
 using namespace std;
 
 #define MAX_LENGTH 256
-
 
 // Abstract Command Class
 class Command {
@@ -14,36 +21,38 @@ public:
 };
 
 // Print buffer string.
-class PrintCommand : public Command{
+class PrintCommand : public Command {
 
     char* buffer;
 
 public:
-    PrintCommand(char* buffer){
+    PrintCommand(char* buffer) {
         this->buffer = buffer;
     }
     void execute() {
-        if (strlen(buffer) == 0)
-        {
+        if (strlen(buffer) == 0) {
             cout << ">>[ Buffer is empty. ]" << endl;
         }
         else {
             cout << ">>" << buffer << endl;
         }
     }
-    void undo(){}
+    void undo() {
+        cout << ">>[ Undid: Print. ]" << endl;
+    }
 };
 
 // Append string to buffer.
-class AddCommand : public Command{
+class AddCommand : public Command {
 
     char* buffer;
     int* size;
     int* length;
     int maxSize;
     int inputLength;
+    
 public:
-    AddCommand(char* buffer, int* _size, int* _length, int _maxSize){
+    AddCommand(char* buffer, int* _size, int* _length, int _maxSize) {
         this->buffer = buffer;
         size = _size;
         length = _length;
@@ -56,31 +65,30 @@ public:
         inputLength = strlen(buffer);
         *length += inputLength;
         *size = maxSize - *length;
-        cout << ">>[ Added ]" << endl;
+        cout << ">>[ Added. ]" << endl;
     }
-    void undo(){
+    void undo() {
         buffer[*length - inputLength] = '\0';
-        cout << ">> [ Undid add.]" << endl;
+        cout << ">> [ Undid add. ]" << endl;
     }
 };
 
 // Remove 'n' characters from beginning of buffer.
-class RemoveCommand : public Command{
+class RemoveCommand : public Command {
 
     char* buffer;
     int* size;
     int* length;
     int maxSize;
     int remove;
-    //char* removed;
+    
 public:
-    RemoveCommand(char* buffer, int* _size, int* _length, int _maxSize){
+    RemoveCommand(char* buffer, int* _size, int* _length, int _maxSize) {
         this->buffer = buffer;
         size = _size;
         length = _length;
         maxSize = _maxSize;
         remove = 0;
-        //removed = NULL;
     }
     void execute() {
         if (*length == 0){
@@ -90,27 +98,32 @@ public:
         else {
             cin.ignore(1, ' ');
             cin >> remove;
-            //removed = new char[remove];
             if (remove < *length) {
-                //memcpy(removed, buffer, remove);
+                // todo: copy what that is being removed into a temp buffer
+                
                 memmove(buffer, buffer+remove, (*length + remove));
                 *length = strlen(buffer);
                 *size = maxSize - *length;
             }
             else {
-                //memcpy(removed, buffer, *length);
+                // todo: copy what that is being removed into a temp buffer
+                
                 buffer[0] = '\0';
                 *size = maxSize;
                 *length = 0;
             }
-            cout << ">>[ Removing " << remove << " characters. ]" << endl;
+            cout << ">>[ Removed " << remove << " characters. ]" << endl;
         }
     }
-    void undo(){}
+    void undo() {
+        // todo: determine new size of buffer
+        // todo: copy tempBuffer + current buffer into current buffer
+        cout << ">>[ Undid remove. ] " << endl;
+    }
 };
 
 // Empty buffer.
-class EmptyCommand : public Command{
+class EmptyCommand : public Command {
 
     char* buffer;
     int* size;
@@ -130,7 +143,10 @@ public:
         *size = maxSize;
         *length = 0;
     }
-    void undo(){}
+    void undo() {
+        // todo: get prev buffer
+        cout << ">>[ Undid emptying. ] " << endl;
+    }
 };
 
 // Return length of buffer.
@@ -145,24 +161,33 @@ public:
     void execute() {
         cout << ">>" << *length << endl;
     }
-    void undo(){}
+    void undo() {
+        cout << ">>[ Undid length. ] " << endl;
+    }
 };
 
-class NoCommand : public Command{
+class NoCommand : public Command {
 public:
-    void execute(){}
-    void undo(){}
+    void execute() {
+        cout << ">>[ No command executed.] " << endl;
+    }
+    void undo() {
+        cout << ">>[ Undid no command. ] " << endl;
+    }
 };
 
 class Shell {
     Command** commandList;
+    stack<Command*> commandStack;
+    
 public:
-    Shell(Command* cmdList[]){
+    Shell(Command* cmdList[]) {
         this->commandList = cmdList;
     }
-    void prompt(){
+    void prompt() {
         // Command object to hold instances of commands.
         Command* commandSlot = new NoCommand();
+        Command* lastCommand = new NoCommand();
         char operation = '\0';
         bool exit = false;
         bool undo = false;
@@ -172,7 +197,7 @@ public:
         << endl;
 
         // User input loop.
-        while(!exit){
+        while(!exit) {
             cout << "Enter command ('?' for help): ";
             // Clear input buffer.
             cin.clear();
@@ -180,7 +205,7 @@ public:
 
             // Retrieve operation from buffer.
             cin.get(operation);
-            switch(operation){
+            switch(operation) {
                 case '?':
                     cout << ">>\n\tp - Print Buffer"
                     << "\n\ta <str> - Add string to buffer"
@@ -214,16 +239,30 @@ public:
                     undo = true;
                     break;
                 default:
-                        cout << ">>[ Unknown command, please try again ]" << endl;
+                        cout << ">>[ Unknown command, please try again. ]" << endl;
                         commandSlot = new NoCommand();
-            }
+            }         
             // Run selected operation.
-            if (undo)
-            {
-                commandSlot->undo();
+            if (undo) {
+                // Check if there are commands in stack
+                if (!commandStack.empty()) {
+                    lastCommand = commandStack.top();
+                    commandStack.pop();
+                    cout << "-----Popped from stack." << endl;
+                    
+                    lastCommand->undo();
+                }
+                else {
+                    cout << ">>[ No more commands to undo. ]" << endl;
+                }
                 undo = false;
             }
-            else{
+            else {
+                // Add command to stack
+                lastCommand = commandSlot;
+                commandStack.push(commandSlot);
+                cout << "-----Pushed to stack." << endl;
+                
                 commandSlot->execute();
             }
             // Clear buffer.
@@ -232,13 +271,16 @@ public:
     }
 };
 
-int main(){
+int main() {
 
     // --Properties
     int length = 0;
     int size = MAX_LENGTH;
     char buffer[size];
 
+    // Initialize
+    buffer[0] = '\0';
+  
     // Specific commands.
     Command* printCmd = new PrintCommand(&buffer[0]);
     Command* addCmd = new AddCommand(&buffer[0], &size, &length, MAX_LENGTH);
