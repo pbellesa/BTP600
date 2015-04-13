@@ -1,13 +1,13 @@
-function Room (hero) {
+function Room (hero, message) {
 
   var container = new PIXI.DisplayObjectContainer();
   var texture = PIXI.TextureCache["assets/dungeon.png"];
   var sprite = new PIXI.Sprite(texture);
   var doors = new Door();
-  var goblins = []
+  var goblins = [];
   var key = new Key();
-  var message = new PIXI.Text("Save the princess!", {font: "32px courier", fill: "white"});
   var hasKey = false;
+  this.mainRoom = false;
   //var hero = new Hero();
 
   this.getRoom = function() {
@@ -16,7 +16,6 @@ function Room (hero) {
 
 
   this.init = function(){
-    console.log(hero);
     container.visible = false;
     container.addChild(sprite);
     // Doors
@@ -26,28 +25,39 @@ function Room (hero) {
     container.addChild(doors.west);
     container.addChild(doors.east);
 
-    // Hero
-    //container.addChild(hero.getSprite());
 
     var goblinFactory = new GoblinFactory();
-      udf = goblinFactory.createGoblin({
+      goblins[0] = goblinFactory.createGoblin({
         goblinType: "udf",
         xPos: 150,
         yPos: 50
       });
-      goblins.push(goblinFactory.createGoblin({
+      goblins[1] = goblinFactory.createGoblin({
         goblinType: "lrf",
         xPos: 150,
         yPos: 100
-      }));
-      lrf.goblin.setPosition(100, 200);
-      gamePlayScene.addChild(udf.goblin.getSprite());
-      gamePlayScene.addChild(lrf.goblin.getSprite());
-      udf.goblin.animateFront();
-      lrf.goblin.animateRight();
-    // Goblin
-    container.addChild(goblin.getSprite());
-    goblin.animateFront();
+      });
+      goblins[2] = goblinFactory.createGoblin({
+        goblinType: "udf",
+        xPos: 300,
+        yPos: 100
+      });
+      goblins[3] = goblinFactory.createGoblin({
+        goblinType: "lrf",
+        xPos: 150,
+        yPos: 300,
+      });
+
+
+      container.addChild(goblins[0].goblin.getSprite());
+      container.addChild(goblins[1].goblin.getSprite());
+      container.addChild(goblins[2].goblin.getSprite());
+      container.addChild(goblins[3].goblin.getSprite());
+
+      goblins[0].goblin.animateFront();
+      goblins[1].goblin.animateRight();
+      goblins[2].goblin.animateRight();
+      goblins[3].goblin.animateRight();
 
     // Key
 
@@ -55,7 +65,7 @@ function Room (hero) {
     container.addChild(key.getSprite());
     key.getSprite().visible = false;
 
-    container.addChild(message);
+    //container.addChild(message);
     message.position.set(120, 240);
   }
 
@@ -68,26 +78,35 @@ function Room (hero) {
   }
   // Check for collisions with doors.
   this.doorHit = function() {
-    if (hitTestRectangle(hero.getSprite(), doors.north) && doors.north.visible) {
-      container.visible = false;
-      this.setHeroPosition("south");
-      return "n";
+    if(hero.getSprite().visible){
+      if (hitTestRectangle(hero.getSprite(), doors.north) && doors.north.visible) {
+        if(!this.mainRoom){
+          container.visible = false;
+          this.setHeroPosition("south");
+        }
+        else if (hero.hasKey){
+          container.visible = false;
+        }
+
+        return "n";
+      }
+      if (hitTestRectangle(hero.getSprite(), doors.south) && doors.south.visible) {
+        container.visible = false;
+        this.setHeroPosition("north");
+        return "s";
+      }
+      if (hitTestRectangle(hero.getSprite(), doors.west) && doors.west.visible) {
+        container.visible = false;
+        this.setHeroPosition("east");
+        return "w";
+      }
+      if (hitTestRectangle(hero.getSprite(), doors.east) && doors.east.visible) {
+        container.visible = false;
+        this.setHeroPosition("west");
+        return "e";
+      }
     }
-    if (hitTestRectangle(hero.getSprite(), doors.south) && doors.south.visible) {
-      container.visible = false;
-      this.setHeroPosition("north");
-      return "s";
-    }
-    if (hitTestRectangle(hero.getSprite(), doors.west) && doors.west.visible) {
-      container.visible = false;
-      this.setHeroPosition("east");
-      return "w";
-    }
-    if (hitTestRectangle(hero.getSprite(), doors.east) && doors.east.visible) {
-      container.visible = false;
-      this.setHeroPosition("west");
-      return "e";
-    }
+
     return null;
   }
 
@@ -132,16 +151,21 @@ function Room (hero) {
 
       hero.moveHero();
 
-      goblin.moveVertical();
+      goblins[0].goblin.moveVertical();
+      goblins[1].goblin.moveHorizontal();
+      goblins[2].goblin.moveVertical();
+      goblins[3].goblin.moveHorizontal();
 
+      for(i = 0; i < goblins.length; i++){
+        if (hitTestRectangle(hero.getSprite(), goblins[i].goblin.getSprite())) {
 
-      if (hitTestRectangle(hero.getSprite(), goblin.getSprite())) {
-
-        message.setText("Aaagghh, you died!");
-        hero.getSprite().tint = 0xff3300;
-        hero.getSprite().visible = false;
+          message.setText("Aaagghh, you died!");
+          hero.getSprite().tint = 0xff3300;
+          hero.getSprite().visible = false;
+        }
       }
-      else if(hitTestRectangle(hero.getSprite(), key.getSprite()) && key.getSprite().visible) {
+
+      if(hitTestRectangle(hero.getSprite(), key.getSprite()) && key.getSprite().visible) {
         message.setText("Free The princess!");
         hero.getSprite().tint = 0xffff00;
         key.getSprite().visible = false;
