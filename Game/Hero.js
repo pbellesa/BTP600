@@ -12,7 +12,7 @@ function Hero() {
 
     //Loads texture from tileset
     var texture = new PIXI.Texture(PIXI.BaseTextureCache["assets/tileset.png"], frames.front[0]);
-
+    this.hasKey = false;
     //Tell the texture to use that rectangular section
     this.sprite = new PIXI.Sprite(texture);
 

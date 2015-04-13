@@ -4,7 +4,7 @@ function Room (hero) {
   var texture = PIXI.TextureCache["assets/dungeon.png"];
   var sprite = new PIXI.Sprite(texture);
   var doors = new Door();
-  var goblin = new Goblin();
+  var goblins = []
   var key = new Key();
   var message = new PIXI.Text("Save the princess!", {font: "32px courier", fill: "white"});
   var hasKey = false;
@@ -29,6 +29,22 @@ function Room (hero) {
     // Hero
     //container.addChild(hero.getSprite());
 
+    var goblinFactory = new GoblinFactory();
+      udf = goblinFactory.createGoblin({
+        goblinType: "udf",
+        xPos: 150,
+        yPos: 50
+      });
+      goblins.push(goblinFactory.createGoblin({
+        goblinType: "lrf",
+        xPos: 150,
+        yPos: 100
+      }));
+      lrf.goblin.setPosition(100, 200);
+      gamePlayScene.addChild(udf.goblin.getSprite());
+      gamePlayScene.addChild(lrf.goblin.getSprite());
+      udf.goblin.animateFront();
+      lrf.goblin.animateRight();
     // Goblin
     container.addChild(goblin.getSprite());
     goblin.animateFront();
@@ -123,12 +139,13 @@ function Room (hero) {
 
         message.setText("Aaagghh, you died!");
         hero.getSprite().tint = 0xff3300;
-        //hero.getSprite().visible = false;
+        hero.getSprite().visible = false;
       }
       else if(hitTestRectangle(hero.getSprite(), key.getSprite()) && key.getSprite().visible) {
         message.setText("Free The princess!");
         hero.getSprite().tint = 0xffff00;
         key.getSprite().visible = false;
+        hero.hasKey = true;
       }
       else {
         //if there's no collision, reset the message text
