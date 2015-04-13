@@ -8,14 +8,10 @@
 	<script src="Goblin.js"></script>
 	<script src="Key.js"></script>
 	<script src="Hero.js"></script>
-<<<<<<< HEAD
-	<script src="Door.js"></script>
-=======
   <script src="Door.js"></script>
   <script src="Room.js"></script>
   <script src="Dungeon.js"></script>
 
->>>>>>> gh-pages
 	<script type="text/javascript">
 		var stage = new PIXI.Stage(0x000000);
 		var renderer = PIXI.autoDetectRenderer(
@@ -41,97 +37,13 @@
 
 		loader.load();
 
-		var
-      dungeon;
+		var dungeon;
 
 		// Function to load tileset and use sprite from it.
 		function setup() {
 			// Setting up scenes
-<<<<<<< HEAD
-			gamePlayScene = new PIXI.DisplayObjectContainer();
-			gameOverScene = new PIXI.DisplayObjectContainer();
 
-			stage.addChild(gamePlayScene);
-			stage.addChild(gameOverScene);
-
-			gameOverScene.visible = false;
-
-			// Dungeon Texture
-			var dungeonTexture = PIXI.TextureCache["assets/dungeon.png"];
-			dungeon = new PIXI.Sprite(dungeonTexture);
-			gamePlayScene.addChild(dungeon);
-
-			monstersMoving = false;
-			message = new PIXI.Text(
-				"Save the princess!", {
-					font: "32px courier",
-					fill: "white"
-				}
-			);
-
-			message.position.set(128, 256);
-			gamePlayScene.addChild(message);
-
-
-			/**************HERO BEGIN*************/
-			//Creates a new Hero object and adds it to the PlayScene
-			hero = new Hero();
-			gamePlayScene.addChild(hero.getSprite());
-
-			/**************HERO END*************/
-
-
-			/**************DOOR BEGIN*************/
-			door = new Door();
-			gamePlayScene.addChild(door.north);
-			gamePlayScene.addChild(door.south);
-			gamePlayScene.addChild(door.west);
-			gamePlayScene.addChild(door.east);
-			/**************DOOR END*************/
-
-			/**************GOBLIN BEGIN*************/
-			// Create an instance of our factory that makes cars
-			var goblinFactory = new GoblinFactory();
-			udf = goblinFactory.createGoblin({
-				goblinType: "udf",
-				xPos: 150,
-				yPos: 50
-			});
-			lrf = goblinFactory.createGoblin({
-				goblinType: "lrf",
-				xPos: 150,
-				yPos: 100
-			});
-			lrf.goblin.setPosition(100, 200);
-			gamePlayScene.addChild(udf.goblin.getSprite());
-			gamePlayScene.addChild(lrf.goblin.getSprite());
-			udf.goblin.animateFront();
-			lrf.goblin.animateRight();
-			/**************GOBLIN END*************/
-
-			//////////////////////////////////////////////
-			// KEY
-			/////////////////////////////////////////////
-
-			key = new Key();
-			key.spawn();
-			gamePlayScene.addChild(key.getSprite());
-
-
-			// Set game state
-			state = play;
-=======
-			// gamePlayScene = new PIXI.DisplayObjectContainer();
-			// gameOverScene = new PIXI.DisplayObjectContainer();
-
-   //    room = new Room();
       dungeon = new Dungeon(stage);
-   //    room.setDoor({north: true, south: true, west: false, east: false});
-   //    gamePlayScene = room.getRoom();
-
-			// stage.addChild(gamePlayScene);
-
->>>>>>> gh-pages
 
 			//Render the stage
 			renderer.render(stage);
@@ -153,45 +65,8 @@
 		}
 
 
-<<<<<<< HEAD
 		function play() {
-
-			//Element movement
-			hero.moveHero();
-			udf.goblin.moveVertical();
-			lrf.goblin.moveHorizantal();
-
-			/**********Collision section Begin**********/
-
-			if (hitTestRectangle(hero, door.north)) {
-				gameOverScene.visible = true;
-				gamePlayScene.visible = false;
-			}
-
-			//check for a collision between the Hero and the Goblin
-			if (hitTestRectangle(hero.getSprite(), udf.goblin.getSprite())) {
-				//if there's a collision, change the message text
-				//and tint the box red
-				message.setText("Aaagghh, you died!");
-				hero.getSprite().tint = 0xff3300;
-			} else if (hitTestRectangle(hero.getSprite(), lrf.goblin.getSprite())) {
-				//if there's a collision, change the message text
-				//and tint the box red
-				message.setText("Aaagghh, you died!");
-				hero.getSprite().tint = 0xff3300;
-			} else if (hitTestRectangle(hero.getSprite(), key.getSprite())) {
-				//if there's a collision, change the message text
-				//and tint the box red
-				message.setText("Free The princess!");
-				hero.getSprite().tint = 0xffff00;
-			} else {
-				//if there's no collision, reset the message text 
-				//and the hero's colour
-				message.setText("No collision...");
-				hero.getSprite().tint = 0xffffff;
-			}
-=======
->>>>>>> gh-pages
+      dungeon.play();
 
 			/***********Collision section End***********/
 

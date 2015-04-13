@@ -4,7 +4,7 @@ function Room (hero) {
   var texture = PIXI.TextureCache["assets/dungeon.png"];
   var sprite = new PIXI.Sprite(texture);
   var doors = new Door();
-  var goblins = []
+  var goblins = [];
   var key = new Key();
   var message = new PIXI.Text("Save the princess!", {font: "32px courier", fill: "white"});
   var hasKey = false;
@@ -26,28 +26,25 @@ function Room (hero) {
     container.addChild(doors.west);
     container.addChild(doors.east);
 
-    // Hero
-    //container.addChild(hero.getSprite());
 
     var goblinFactory = new GoblinFactory();
-      udf = goblinFactory.createGoblin({
+      goblins[0] = goblinFactory.createGoblin({
         goblinType: "udf",
         xPos: 150,
         yPos: 50
       });
-      goblins.push(goblinFactory.createGoblin({
+      goblins[1] = goblinFactory.createGoblin({
         goblinType: "lrf",
         xPos: 150,
         yPos: 100
-      }));
-      lrf.goblin.setPosition(100, 200);
-      gamePlayScene.addChild(udf.goblin.getSprite());
-      gamePlayScene.addChild(lrf.goblin.getSprite());
-      udf.goblin.animateFront();
-      lrf.goblin.animateRight();
-    // Goblin
-    container.addChild(goblin.getSprite());
-    goblin.animateFront();
+      });
+
+
+      container.addChild(goblins[0].goblin.getSprite());
+      container.addChild(goblins[1].goblin.getSprite());
+
+      goblins[0].goblin.animateFront();
+      goblins[1].goblin.animateRight();
 
     // Key
 
@@ -132,16 +129,19 @@ function Room (hero) {
 
       hero.moveHero();
 
-      goblin.moveVertical();
+      goblins[0].goblin.moveVertical();
+      goblins[1].goblin.moveHorizontal();
 
+      for(i = 0; i < goblins.length; i++){
+        if (hitTestRectangle(hero.getSprite(), goblins[i].goblin.getSprite())) {
 
-      if (hitTestRectangle(hero.getSprite(), goblin.getSprite())) {
-
-        message.setText("Aaagghh, you died!");
-        hero.getSprite().tint = 0xff3300;
-        hero.getSprite().visible = false;
+          message.setText("Aaagghh, you died!");
+          hero.getSprite().tint = 0xff3300;
+          hero.getSprite().visible = false;
+        }
       }
-      else if(hitTestRectangle(hero.getSprite(), key.getSprite()) && key.getSprite().visible) {
+
+      if(hitTestRectangle(hero.getSprite(), key.getSprite()) && key.getSprite().visible) {
         message.setText("Free The princess!");
         hero.getSprite().tint = 0xffff00;
         key.getSprite().visible = false;
