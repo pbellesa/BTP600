@@ -1,3 +1,4 @@
+// Author: Maggie Ha
 function Door() {
   // DOOR TILE SET FRAMES
   var frames = {

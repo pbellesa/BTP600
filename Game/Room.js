@@ -1,3 +1,5 @@
+// Room.js
+// By Pedro Bellesa
 function Room (hero, message) {
 
   var container = new PIXI.DisplayObjectContainer();
@@ -10,11 +12,12 @@ function Room (hero, message) {
   this.mainRoom = false;
   //var hero = new Hero();
 
+  // Return reference to room instance
   this.getRoom = function() {
     return container;
   }
 
-
+  // Constructor
   this.init = function(){
     container.visible = false;
     container.addChild(sprite);
@@ -25,7 +28,7 @@ function Room (hero, message) {
     container.addChild(doors.west);
     container.addChild(doors.east);
 
-
+    // Create goblins
     var goblinFactory = new GoblinFactory();
       goblins[0] = goblinFactory.createGoblin({
         goblinType: "udf",
@@ -48,19 +51,19 @@ function Room (hero, message) {
         yPos: 300,
       });
 
-
+      // Add Goblins
       container.addChild(goblins[0].goblin.getSprite());
       container.addChild(goblins[1].goblin.getSprite());
       container.addChild(goblins[2].goblin.getSprite());
       container.addChild(goblins[3].goblin.getSprite());
 
+      // Animate Goblins
       goblins[0].goblin.animateFront();
       goblins[1].goblin.animateRight();
       goblins[2].goblin.animateRight();
       goblins[3].goblin.animateRight();
 
     // Key
-
     key.spawn();
     container.addChild(key.getSprite());
     key.getSprite().visible = false;
@@ -69,13 +72,17 @@ function Room (hero, message) {
     message.position.set(120, 240);
   }
 
+  // Toggle Visibility
   this.setVisibility = function (visible){
     container.visible = visible;
   }
+
+  // Sets room to spawn key
   this.spawnKey = function() {
     hasKey = true;
     key.getSprite().visible = true;
   }
+
   // Check for collisions with doors.
   this.doorHit = function() {
     if(hero.getSprite().visible){
@@ -110,6 +117,7 @@ function Room (hero, message) {
     return null;
   }
 
+  // Set Position of Hero according to the room size.
   this.setHeroPosition = function(position){
     switch(position) {
       case "north":
@@ -128,6 +136,7 @@ function Room (hero, message) {
           hero.setPosition(240, 240);
     }
   }
+
   // Set all the doors, receives object with
   // north, south, east, west with boolean values
   this.setDoor = function(doorSet){
@@ -170,12 +179,6 @@ function Room (hero, message) {
         hero.getSprite().tint = 0xffff00;
         key.getSprite().visible = false;
         hero.hasKey = true;
-      }
-      else {
-        //if there's no collision, reset the message text
-        //and the hero's colour
-        //this.message.setText("No collision...");
-        //hero.getSprite().tint = 0xffffff;
       }
   }
 

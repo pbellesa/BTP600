@@ -1,4 +1,5 @@
 //Hero class
+// Author: James Laverty & Pedro Bellesa
 function Hero() {
 
     //Create a rectangle object that defines the position and

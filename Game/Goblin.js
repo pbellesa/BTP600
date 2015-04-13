@@ -1,6 +1,7 @@
 ////////////////////
 // Basic Goblin
 ////////////////////
+// Authors: Rafid Daoud & Pedro Bellesa
 function Goblin() {
 	// TILE SET FRAMES
 	var frames = {

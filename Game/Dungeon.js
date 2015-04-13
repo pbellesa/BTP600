@@ -1,9 +1,13 @@
+// Dungeon.js
+// Author: Pedro Bellesa
 function Dungeon (stage) {
   var rooms = [];
   var state;
   var currentRoom;
   var hero = new Hero();
   var message = new PIXI.Text("Save the princess!", {font: "32px courier", fill: "white"});
+
+  // Initialize Rooms
   var setupRooms = function() {
     /*
       LAYOUT:
@@ -16,12 +20,19 @@ function Dungeon (stage) {
         |_______|_______|______|
 
     */
+
+    // Add rooms to stage
     for(i = 0; i < 6; i++){
       rooms[i] = new Room(hero, message);
       stage.addChild(rooms[i].getRoom());
     }
+    // Add message to stage;
     stage.addChild(message);
+
+    // Add hero to stage
     stage.addChild(hero.getSprite());
+
+    // Set door configuration of room according to layout
     rooms[0].setDoor({north: false, south: true, west: false, east: false});
     rooms[1].setDoor({north: false, south: true, west: false, east: false});
     rooms[2].setDoor({north: true, south: false, west: false, east: true});
@@ -29,6 +40,8 @@ function Dungeon (stage) {
     rooms[4].setDoor({north: true, south: false, west: true, east: false});
     rooms[5].setDoor({north: false, south: true, west: false, east: false});
   }
+
+
 
   var room0 = function() {
     rooms[0].setVisibility(true);

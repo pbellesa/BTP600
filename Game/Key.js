@@ -1,3 +1,4 @@
+// Author: Rafid Daoud
 function Key() {
 	// GOLBALS
 	var NUM_ROOMS = 6;
