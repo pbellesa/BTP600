@@ -1,75 +1,96 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>BTP600 - Assignment 2</title>
-
-<body>
-	<script src="pixi.js/bin/pixi.js"></script>
-	<script type="text/javascript" src="supportlib.js"></script>
-	<script src="Goblin.js"></script>
-	<script src="Key.js"></script>
-	<script src="Hero.js"></script>
-  <script src="Door.js"></script>
-  <script src="Room.js"></script>
-  <script src="Dungeon.js"></script>
-
-	<script type="text/javascript">
-		var stage = new PIXI.Stage(0x000000);
-		var renderer = PIXI.autoDetectRenderer(
-			512, 512, {
-				antialiasing: false,
-				transparent: false,
-				resolution: 1
-			}
-		);
-
-		document.body.appendChild(renderer.view);
-
-		// Load tileset
-		var loader = new PIXI.AssetLoader([
-			"assets/tileset.png",
-			"assets/dungeon.png",
-			"assets/goblin.png",
-			"assets/key.png",
-			"assets/door-tile.png"
-		]);
-
-		loader.onComplete = setup;
-
-		loader.load();
-
-		var dungeon;
-
-		// Function to load tileset and use sprite from it.
-		function setup() {
-			// Setting up scenes
-
-      dungeon = new Dungeon(stage);
-
-			//Render the stage
-			renderer.render(stage);
-
-			//Start the game loop
-			gameLoop();
-		}
-
-		function gameLoop() {
-
-			//Loop this function at 60 frames per second
-			requestAnimationFrame(gameLoop);
-
-			//Update the current game state
-			dungeon.play();
-
-			//Render the stage to see the animation
-			renderer.render(stage);
-		}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>BTP600 - Assignment 2</title>
+     <style>
+      canvas {
+        display: block;
+        position: relative;
+        margin: 0 auto;
+      }
+      body {
+        background-color: black;
+        color: white;
+        font-family: "Heveltica", sans-serif;
+        text-align: center;
+      }
+     </style>
+  </head>
 
 
-		function play() {
-      dungeon.play();
+  <body>
+    <h1>The Semester of Time</h1>
 
-			/***********Collision section End***********/
+  	<script src="pixi.js/bin/pixi.js"></script>
+  	<script type="text/javascript" src="supportlib.js"></script>
+  	<script src="Goblin.js"></script>
+  	<script src="Key.js"></script>
+  	<script src="Hero.js"></script>
+    <script src="Door.js"></script>
+    <script src="Room.js"></script>
+    <script src="Dungeon.js"></script>
 
-		}
-	</script>
-</body>
+  	<script type="text/javascript">
+      // PIXI Stage Setup
+
+  		var stage = new PIXI.Stage(0x000000);
+  		var renderer = PIXI.autoDetectRenderer(
+  			512, 512, {
+  				antialiasing: false,
+  				transparent: false,
+  				resolution: 1
+  			}
+  		);
+
+      // Add PIXI rendered to DOM
+  		document.body.appendChild(renderer.view);
+
+  		// Load Image Assets
+  		var loader = new PIXI.AssetLoader([
+  			"assets/tileset.png",
+  			"assets/dungeon.png",
+  			"assets/goblin.png",
+  			"assets/key.png",
+  			"assets/door-tile.png"
+  		]);
+
+      // Set startup function
+  		loader.onComplete = setup;
+
+      // Load PIXI
+  		loader.load();
+
+      // Variable to hold instance of game.
+  		var dungeon;
+
+  		// Function to load tileset and use sprite from it.
+  		function setup() {
+
+        // Create new instance of Dungeon with reference to stage.
+        dungeon = new Dungeon(stage);
+
+  			//Render the stage
+  			renderer.render(stage);
+
+  			//Start the game loop
+  			gameLoop();
+  		}
+
+  		function gameLoop() {
+
+  			//Loop this function at 60 frames per second
+  			requestAnimationFrame(gameLoop);
+
+  			//Update the current game state
+  			dungeon.play();
+
+  			//Render the stage to see the animation
+  			renderer.render(stage);
+  		}
+
+  	</script>
+    <p>Created by</p>
+    <p>Pedro Bellesa - Rafid Daoud - Maggie Ha - James Laverty</p>
+  </body>
+</html>

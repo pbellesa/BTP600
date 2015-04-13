@@ -3,7 +3,7 @@ function Dungeon (stage) {
   var state;
   var currentRoom;
   var hero = new Hero();
-
+  var message = new PIXI.Text("Save the princess!", {font: "32px courier", fill: "white"});
   var setupRooms = function() {
     /*
       LAYOUT:
@@ -17,10 +17,10 @@ function Dungeon (stage) {
 
     */
     for(i = 0; i < 6; i++){
-      rooms[i] = new Room(hero);
+      rooms[i] = new Room(hero, message);
       stage.addChild(rooms[i].getRoom());
     }
-
+    stage.addChild(message);
     stage.addChild(hero.getSprite());
     rooms[0].setDoor({north: false, south: true, west: false, east: false});
     rooms[1].setDoor({north: false, south: true, west: false, east: false});
@@ -78,7 +78,12 @@ function Dungeon (stage) {
     var door = rooms[3].doorHit();
      switch(door){
       case "n":
-        state = room0;
+        if(hero.hasKey){
+          state = gameOver;
+        }
+        else{
+          message.setText("Door is locked!");
+        }
         break;
       case "w":
         state = room2;
@@ -124,11 +129,15 @@ function Dungeon (stage) {
     }
   }
   var gameOver = function() {
-
+    hero.getSprite().visible = false;
+    message.setText("You have saved\nthe princess!");
   }
     this.init = function() {
     setupRooms();
-    rooms[1].spawnKey();
+    rooms[3].mainRoom = true;
+
+    var roomNumbers = [ 1, 2, 4, 5];
+    rooms[roomNumbers[Math.round(Math.random()*(roomNumbers.length-1))]].spawnKey();
     state = room3;
   }
   this.init();
