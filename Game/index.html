@@ -8,7 +8,14 @@
 	<script src="Goblin.js"></script>
 	<script src="Key.js"></script>
 	<script src="Hero.js"></script>
+<<<<<<< HEAD
 	<script src="Door.js"></script>
+=======
+  <script src="Door.js"></script>
+  <script src="Room.js"></script>
+  <script src="Dungeon.js"></script>
+
+>>>>>>> gh-pages
 	<script type="text/javascript">
 		var stage = new PIXI.Stage(0x000000);
 		var renderer = PIXI.autoDetectRenderer(
@@ -34,24 +41,13 @@
 
 		loader.load();
 
-		var hero,
-			goblin,
-			dungeon,
-			state,
-			message,
-			door = {},
-			frames = {},
-			movementInterval,
-			goblinInterval,
-			monstersMoving,
-			gameOverScene,
-			gameStartScene,
-			sprites = {},
-			gamePlayScene;
+		var
+      dungeon;
 
 		// Function to load tileset and use sprite from it.
 		function setup() {
 			// Setting up scenes
+<<<<<<< HEAD
 			gamePlayScene = new PIXI.DisplayObjectContainer();
 			gameOverScene = new PIXI.DisplayObjectContainer();
 
@@ -124,6 +120,18 @@
 
 			// Set game state
 			state = play;
+=======
+			// gamePlayScene = new PIXI.DisplayObjectContainer();
+			// gameOverScene = new PIXI.DisplayObjectContainer();
+
+   //    room = new Room();
+      dungeon = new Dungeon(stage);
+   //    room.setDoor({north: true, south: true, west: false, east: false});
+   //    gamePlayScene = room.getRoom();
+
+			// stage.addChild(gamePlayScene);
+
+>>>>>>> gh-pages
 
 			//Render the stage
 			renderer.render(stage);
@@ -138,13 +146,14 @@
 			requestAnimationFrame(gameLoop);
 
 			//Update the current game state
-			state();
+			dungeon.play();
 
 			//Render the stage to see the animation
 			renderer.render(stage);
 		}
 
 
+<<<<<<< HEAD
 		function play() {
 
 			//Element movement
@@ -181,6 +190,8 @@
 				message.setText("No collision...");
 				hero.getSprite().tint = 0xffffff;
 			}
+=======
+>>>>>>> gh-pages
 
 			/***********Collision section End***********/
 

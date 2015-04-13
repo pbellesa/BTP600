@@ -12,7 +12,7 @@ function Hero() {
 
     //Loads texture from tileset
     var texture = new PIXI.Texture(PIXI.BaseTextureCache["assets/tileset.png"], frames.front[0]);
-
+    this.hasKey = false;
     //Tell the texture to use that rectangular section
     this.sprite = new PIXI.Sprite(texture);
 
@@ -23,8 +23,8 @@ function Hero() {
     //Constructor to set initial speed and location of sprite (hero)
     this.init = function() {
         //location
-        this.sprite.x = 32;
-        this.sprite.y = 32;
+        this.sprite.x = 240;
+        this.sprite.y = 240;
 
         //speed
         this.sprite.vy = 0;
